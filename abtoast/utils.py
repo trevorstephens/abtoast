@@ -7,7 +7,7 @@ abtoast - A/B testing tools.
 # License: BSD 3 clause
 
 import math
-from scipy.stats import norm
+from scipy.stats import chisquare, norm
 
 __all__ = ['power_prop_test']
 
@@ -28,3 +28,10 @@ def power_prop_test(p1, p2, power=0.8, significance=0.05, tside=2, k=1.0):
     if k == 1:
         return math.ceil(n)
     return math.ceil(n), math.ceil(k * n)
+
+
+def sample_ratio_mismatch(n1, n2, threshold=0.05):
+    # No Sample Ratio Mismatch detected if p_value >= threshold
+    # Common values for `threshold` are 0.05 or 0.01
+    p_value = chisquare([n1, n2], axis=0).pvalue
+    return p_value, p_value < threshold
